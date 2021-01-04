@@ -1,0 +1,212 @@
+GET /_cat/health?v
+GET /_cat/indices?v
+
+PUT myindex
+{
+  "settings": {
+    "number_of_shards":3,
+    "number_of_replicas": 2
+  }
+}
+
+GET myindex/_search
+
+GET myindex/_mapping
+
+PUT myindex/_mapping
+{
+  "properties":{
+    "Location":{
+      "type":"geo_point"
+    },
+    "Date":{
+      "type":"date"
+    }
+  }
+}
+
+DELETE myindex
+
+#POST _bulk
+#{ "index" : { "_index" : "test", "_id" : "1" } }
+#{ "field1" : "value1" }
+#{ "delete" : { "_index" : "test", "_id" : "2" } }
+#{ "create" : { "_index" : "test", "_id" : "3" } }
+#{ "field1" : "value3" }
+#{ "update" : {"_id" : "1", "_index" : "test"} }
+#{ "doc" : {"field2" : "value2"} }
+
+
+#INDEX API PUT DATA
+PUT /customer/_doc/1
+{
+  "name":"Muhammed Said Kaya"
+}
+
+#GET API GET BY ID
+GET /customer/_doc/1
+
+#GET API SEARCH
+GET customer/_search
+{
+  "query": {
+    "match": {
+      "name": "Muhammed Said"
+    }
+  }
+}
+
+GET /bank/_search
+{
+  "query": {
+    "match_all": {}
+  },
+  "sort": [
+    {
+      "account_number": {
+        "order": "desc"
+      }
+    }
+  ],
+  "from": 10,
+  "size": 2
+}
+
+#mill or lane
+GET /bank/_search
+{
+  "query": {
+    "match": {
+      "address": "mill lane"
+    }
+  },
+  "sort": [
+    {
+      "_id": {
+        "order": "desc"
+      }
+    }
+  ]
+}
+
+# 'mill lane'
+GET /bank/_search
+{
+  "query": {
+    "match_phrase": {
+      "address": "mill lane"
+    }
+  }
+}
+
+GET /bank/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match": {
+            "age": "40"
+          }
+        }
+      ],
+      "filter": [
+        {
+          "range": {
+            "balance": {
+              "gte": 20000,
+              "lte": 30000
+            }
+          }
+        },
+        {
+          "not": {
+            "filter": {
+              "bool": {
+                "should": [
+                  {
+                    "match": {
+                      "state": "IO"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+#      "should": [
+ #       {
+  #        "match": {
+   #         "state": "IO"
+    #      }
+     #   }
+      #],
+
+
+GET /bank/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match": {
+            "title": "Search"
+          }
+        },
+        {
+          "match": {
+            "content": "ELasticSearch"
+          }
+        }
+      ],
+      "filter": [
+        {
+          "term": {
+            "status": "published"
+          }
+        },
+        {
+          "range": {
+            "publish_date": {
+              "gte": "2015-01-01"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+GET /bank/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match": {
+            "address": "lane street"
+          }
+        }
+      ],
+      "filter": [
+        {
+          "range": {
+            "balance": {
+              "gte": 20000,
+              "lte": 30000
+            }
+          }
+        }
+      ]
+    }
+  }
+ 
+}
+
+
+
